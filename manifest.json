@@ -1,0 +1,35 @@
+{
+  "domain": "smartthings",
+  "name": "SmartThings_Custom",
+  "version": "1.0.0",
+  "codeowners": ["@joostlek"],
+  "config_flow": true,
+  "dependencies": ["application_credentials"],
+  "dhcp": [
+    {
+      "hostname": "st*",
+      "macaddress": "24FD5B*"
+    },
+    {
+      "hostname": "smartthings*",
+      "macaddress": "24FD5B*"
+    },
+    {
+      "hostname": "hub*",
+      "macaddress": "24FD5B*"
+    },
+    {
+      "hostname": "hub*",
+      "macaddress": "D052A8*"
+    },
+    {
+      "hostname": "hub*",
+      "macaddress": "286D97*"
+    }
+  ],
+  "documentation": "https://www.home-assistant.io/integrations/smartthings",
+  "iot_class": "cloud_push",
+  "loggers": ["pysmartthings"],
+  "quality_scale": "bronze",
+  "requirements": ["pysmartthings==3.2.5"]
+}
