@@ -12,6 +12,13 @@ In addition to the original features, this custom component adds support for:
 - `Fast Turbo`
 - `Comfort`
 - `Quiet`
+- `Off`
+
+### Swing Modes:
+- `Off`
+- `All`
+- `Vertical`
+- `Horizontal`
 
 ### Additional Features:
 - `Audio Volume`
@@ -19,7 +26,6 @@ In addition to the original features, this custom component adds support for:
 - `Light`
 - `SPI Mode (Purify)`
 
-> ❗ *Note: Support for louver (vertical/horizontal swing) control is currently missing.*
 
 ## 🔐 Authorization
 

@@ -368,6 +368,49 @@ class SmartThingsAirConditioner(SmartThingsEntity, ClimateEntity):
             self._attr_swing_modes = self._determine_swing_modes()
         self._attr_supported_features = self._determine_supported_features()
 
+    @property
+    def swing_mode(self) -> str:
+        """Return the swing setting."""
+        return FAN_OSCILLATION_TO_SWING.get(
+            self.get_attribute_value(
+                Capability.FAN_OSCILLATION_MODE, Attribute.FAN_OSCILLATION_MODE
+            ),
+            SWING_OFF,
+        )
+
+    @property
+    def swing_modes(self) -> list[str] | None:
+        """Return the list of available swing modes."""
+        supported = self.get_attribute_value(
+            Capability.FAN_OSCILLATION_MODE,
+            Attribute.SUPPORTED_FAN_OSCILLATION_MODES,
+        )
+        if supported:
+            return [
+            ha_mode
+            for mode in supported
+            if (ha_mode := FAN_OSCILLATION_TO_SWING.get(mode)) is not None
+            ]
+        fallback = self.get_attribute_value(
+            Capability.FAN_OSCILLATION_MODE, Attribute.FAN_OSCILLATION_MODE
+        )
+        if fallback:
+            return [SWING_OFF, SWING_BOTH, SWING_VERTICAL, SWING_HORIZONTAL]
+        return None
+
+    async def async_set_swing_mode(self, swing_mode: str) -> None:
+        """Set new target swing mode."""
+        result = await self.execute_device_command(
+            Capability.FAN_OSCILLATION_MODE,
+            Command.SET_FAN_OSCILLATION_MODE,
+            argument=[SWING_TO_FAN_OSCILLATION[swing_mode]],
+        )
+        if result is not None:
+            self._internal_state[Capability.FAN_OSCILLATION_MODE][
+                Attribute.FAN_OSCILLATION_MODE
+            ].value = SWING_TO_FAN_OSCILLATION[swing_mode]
+        self.async_write_ha_state()
+
     def _determine_supported_features(self) -> ClimateEntityFeature:
         features = (
             ClimateEntityFeature.TARGET_TEMPERATURE
@@ -578,7 +621,7 @@ class SmartThingsAirConditioner(SmartThingsEntity, ClimateEntity):
         # Použijeme self.device namiesto self._device
         model = self.device.device.ocf.model_number if self.device.device.ocf else None
         if model and "ARTIK051_KRAC_18K" in model:
-            custom_modes = ["Fast Turbo", "Comfort", "Quiet", "2-Step"]
+            custom_modes = ["2-Step", "Fast Turbo", "Comfort", "Quiet", "off"]
             for mode in custom_modes:
                 if mode not in modes:
                     modes.append(mode)
@@ -598,6 +641,8 @@ class SmartThingsAirConditioner(SmartThingsEntity, ClimateEntity):
             command_option = "Comode_Quiet"
         elif preset_mode_lower == "2-step":
             command_option = "Comode_2Step"
+        elif preset_mode_lower == "off":
+            command_option = "Comode_Off"			
 
         if command_option:
             _LOGGER.debug(
