@@ -1,6 +1,6 @@
 # SmartThings Custom Component for Home Assistant
 
-This is a **custom version** of the official SmartThings integration from **Home Assistant 2025.6.3**, extended with features from [veista/smartthings](https://github.com/veista/smartthings), specifically for support of the **ARTIK051_KRAC_18K air conditioner**.
+This is a **custom version** of the official SmartThings integration from **Home Assistant 2025.6.3**, extended with features from [veista/smartthings](https://github.com/veista/smartthings), specifically for support of the **ARTIK051_KRAC_18K AC**.
 
 ## ✨ What's New
 
